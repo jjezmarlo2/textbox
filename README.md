@@ -1,2 +1,2 @@
-# textbox
-Download Textbox on your computer
+# textBox
+Download textbox - the ultimate chatting tool!
