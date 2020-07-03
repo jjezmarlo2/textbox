@@ -202,7 +202,7 @@ unless File.exist?(actual_doc)
 	person = "random_guy"
 	i=0
 	make_file_name = chat_doc + "_people.txt"
-	file = File.open(make_file_name, 'a+', false)
+	file = File.open(make_file_name, 'a+')
 	file.puts @you
 	until person === "done"
 		puts ""
