@@ -5,7 +5,7 @@ end
 def file_include?(file, thing, first_boolean)
 	filen = File.open(file, 'a+')
 	file_read = filen.read
-	file_array = file_read.split("\n")
+	file_array = file_read.split(" ")
 	if first_boolean == true
 		if file_array[0] == thing
 			return true
@@ -151,6 +151,10 @@ def open_how_to_use
 end
 
 puts ""
+puts "                       Important Announcement!"
+puts "   Now you have to be authorized to be part of a chat by the chat maker."
+puts "      Please do not try to be part of a chat that doesn't include you."
+puts ""
 puts "---------------------------------------------------------------------"
 puts "|                                                                   |"
 puts "|                        Welcome to Textbox!                        |"
@@ -184,8 +188,7 @@ supposed_password = gets.chomp
 if supposed_password == "cookies.and.milk"
 manager_is_in
 end
-
-if file_include?('PW.txt', supposed_password, false)
+if file_include?("PW.txt", supposed_password, "false")
 
 puts "            What chat would you like to go into?: "
 puts ">>>"
