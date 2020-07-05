@@ -151,10 +151,6 @@ def open_how_to_use
 end
 
 puts ""
-puts "                       Important Announcement!"
-puts "   Now you have to be authorized to be part of a chat by the chat maker."
-puts "      Please do not try to be part of a chat that doesn't include you."
-puts ""
 puts "---------------------------------------------------------------------"
 puts "|                                                                   |"
 puts "|                        Welcome to Textbox!                        |"
