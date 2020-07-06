@@ -62,7 +62,7 @@ def in_home(person, chat_doc)
   puts file.read
 
 puts ""
-puts ">>> "
+print ">>> "
 @what_to_write = gets.chomp
 file.close
 
@@ -71,15 +71,16 @@ if @what_to_write == "manage"
 	chat_people = chat_doc + "_people.txt"
 	if file_include?(chat_people, @user, true)
 		puts ""
-		puts "Would you like to add a person to your chat?:"
+		print "Would you like to add a person to your chat?: "
 		add_or_not = gets.chomp
 		if add_or_not == "yes"
-			puts "Person to add: "
+			puts ""
+			print "Person to add: "
 			person = gets.chomp
 			add_someone(person, chat_people)
 		end
 		puts ""
-		puts "Would you like to take away a person from your chat?: "
+		print "Would you like to take away a person from your chat?: "
 		sub_or_not = gets.chomp
 		if sub_or_not == "yes"
 			puts "Person to take away: "
@@ -87,21 +88,16 @@ if @what_to_write == "manage"
 			sub_someone(person, chat_people)
 		end
 		puts ""
-		puts "Would you like to delete the current conversation?: "
+		print "Would you like to delete the current conversation?: "
 		delete_or_not = gets.chomp
 		if delete_or_not == "yes"
 			file = File.open(@real_chat,'w')
-			file.write
+			file.write ""
 		end
 	else
 		puts ""
 		puts "You are not authorized to manage this conversation. Please contact the creator of the chat."
 	end
-elsif @what_to_write == "see answers"
-  file = File.open('replies.txt','a+')
-  puts file.read
-  ask_if_delete_reply
-  file.close
 elsif @what_to_write == "r"
   in_home(person, chat_doc)
 elsif @what_to_write == "leave"
@@ -119,41 +115,12 @@ end
 @pws = []
 
 
-def ask_if_delete_conversation
-puts "                What chat would you like to see?"
-puts ">>>"
-what_chat = gets.chomp
-actual_chat = what_chat + '.txt'
-
-if what_chat == "none"
-else
-	puts "               Here is the current conversation: "
-	puts ""
-	file = File.open(actual_chat,'a+')
-	puts file.read
-	file.close
-	puts ""
-	puts "       Do you want to delete the current conversation?: "
-	puts ">>>"
-	conversation_gone = gets.chomp
-
-	if conversation_gone == "yes"
-		file = File.open(actual_chat,'w')
-		file.write
-	end
-end
-end
-
 def open_how_to_use
 	puts "Do not type the '.txt' part when it asks for the chat document."
 	puts "To contact the manager, type 'contact manager' when you are in the chat."
 	puts "Type 'r' to refresh."
 end
 
-puts ""
-puts "                       Important Announcement!"
-puts "   Now you have to be authorized to be part of a chat by the chat maker."
-puts "      Please do not try to be part of a chat that doesn't include you."
 puts ""
 puts "---------------------------------------------------------------------"
 puts "|                                                                   |"
@@ -164,40 +131,49 @@ puts "---------------------------------------------------------------------"
 puts ""
 puts "                      Are you new? Yes or no: "
 puts ""
-puts '>>>'
+print '>>> '
 new_or_not = gets.chomp
 
 if new_or_not == "yes"
+puts ""
 puts "                   What will your username be?: "
-puts ">>>"
+puts ""
+print ">>> "
 username = gets.chomp
 password = username + extra_symbol
 puts "Your password is \"#{password}\""
 file = File.open('pw.txt','a+')
 file.puts password
 file.close
-puts "Type the honor word 'yes' to say that you know your password: "
+puts ""
+puts "     Type the honor word 'yes' to say that you know your password: "
+puts ""
 yes = gets.chomp
 if yes == "yes"
 end
 elsif new_or_not == "no"
+puts ""
 puts "                     What is your password?: "
-puts ">>>"
+puts ""
+print ">>> "
 supposed_password = gets.chomp
 
 if supposed_password == "cookies.and.milk"
 manager_is_in
 end
 if file_include?("PW.txt", supposed_password, "false")
-
-puts "            What chat would you like to go into?: "
-puts ">>>"
+puts ""
+puts "               What chat would you like to go into?: "
+puts ""
+print ">>> "
 chat_doc = gets.chomp
 actual_doc = chat_doc + ".txt"
 @you = make_user_name(supposed_password)
 
 unless File.exist?(actual_doc)
-	puts "Who would you like to be allowed in #{chat_doc}?"
+	puts ""
+	puts "      Who would you like to be allowed in #{chat_doc}?"
+	puts ""
 	person = "random_guy"
 	i=0
 	make_file_name = chat_doc + "_people.txt"
@@ -222,9 +198,11 @@ puts "                 --------------------------"
 puts "                |        You're in!        |"
 puts "                |    Welcome to the chat!  |"
 puts "                 --------------------------"
+puts ""
 in_home(supposed_password, chat_doc)
 end
-elsif new_or_not == "how to use"
-	open_how_to_use
 end
+elsif new_or_not == "version"
+	puts ""
+	puts "Textbox 2.0"
 end
