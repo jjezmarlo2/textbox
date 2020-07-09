@@ -1,5 +1,30 @@
+require 'colorize'
+def make_user_name(user_pw)
+	return user_pw[0...-1]
+end
 def extra_symbol
  ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "!", "@", "#", "$"].sample
+end
+
+def find_colors(person)
+	file = File.open('PW.txt', 'a+')
+	file_read = file.read
+	file_array = file_read.split(" ")
+	i = 0
+	file_array.each do |password|
+		username = make_user_name(password)
+		if username == person
+			@pw_index = i
+		end
+		i+=1
+	end
+	file.close
+	file = File.open('colors.txt', 'a+')
+	file_read = file.read
+	file_array = file_read.split("\n")
+	colors = file_array[@pw_index]
+	color_array = colors.split(" ")
+	return color_array
 end
 
 def file_include?(file, thing, first_boolean)
@@ -47,11 +72,11 @@ def sub_someone(person, doc)
 	file.close
 end
 
-def make_user_name(user_pw)
-	return user_pw[0...-1]
-end
 
-def in_home(person, chat_doc)
+
+def in_home(person, chat_doc, colors_array)
+  text_color = colors_array[0].to_sym
+  back_color = colors_array[1].to_sym
   puts ""
   
   @user = make_user_name(person)
@@ -59,7 +84,23 @@ def in_home(person, chat_doc)
 
   @real_chat = chat_doc + '.txt'
   file = File.open(@real_chat,'a+')
-  puts file.read
+  file.each do |line|
+	line_splitted = line.split(" ")
+	line = make_user_name(line)
+	if line_splitted[0] == @user + ":"
+		puts line.colorize(:color => text_color, :background => back_color)
+		puts ""
+	else
+		other_user = line_splitted[0]
+		other_user = make_user_name(other_user)
+		colors_for_other = find_colors(other_user)
+		textcolor = colors_for_other[0].to_sym
+		backcolor = colors_for_other[1].to_sym
+		puts line.colorize(:color => textcolor, :background => backcolor)
+		puts ""
+	end
+	end
+ # puts file.read
 
 puts ""
 print ">>> "
@@ -102,13 +143,48 @@ elsif @what_to_write == "r"
   in_home(person, chat_doc)
 elsif @what_to_write == "leave"
 elsif @what_to_write == "quit"
-
+elsif @what_to_write == "change colors"
+	new_file_array = []
+	puts ""
+	print "What color would you like your text to be?: "
+	textcolor = gets.chomp
+	puts ""
+	print "What background color would you like your text to have?: "
+	backgroundcolor = gets.chomp
+	puts ""
+	file = File.open('PW.txt', 'a+')
+		file_read = file.read
+		file_array = file_read.split(" ")
+		@user_index = file_array.index(person)
+	file.close
+	file = File.open("colors.txt", 'a+')
+		file_read = file.read
+		file_array = file_read.split("\n")
+		user_colors = file_array[@user_index]
+		i = 0
+		file_array.each do |color_set|
+			if i == @user_index
+				new_colors = "#{textcolor} #{backgroundcolor}"
+				new_file_array.push(new_colors)
+			else
+				new_file_array.push(color_set)
+			end
+			i+=1
+		end
+	file.close
+	file = File.open('colors.txt', 'w')
+		new_file_array.each do |color_set|
+			file.puts color_set
+		end
+	file.close
+elsif @what_to_write == "available colors"
+	puts String.colors
 else
   @real_chat = chat_doc + '.txt'
   file = File.open(@real_chat, 'a+')
   file.puts "#{@user}: #{@what_to_write}"
   file.close
-  in_home(person, chat_doc)
+  in_home(person, chat_doc, colors_array)
 end
 end
 
@@ -146,11 +222,16 @@ file = File.open('pw.txt','a+')
 file.puts password
 file.close
 puts ""
-puts "     Type the honor word 'yes' to say that you know your password: "
+print "What color would you like your text to be?: "
+textcolor = gets.chomp
 puts ""
-yes = gets.chomp
-if yes == "yes"
-end
+print "What background color would you like your text to have?: "
+backgroundcolor = gets.chomp
+puts ""
+file = File.open("colors.txt", 'a+')
+	file.puts textcolor + " " + backgroundcolor
+file.close
+
 elsif new_or_not == "no"
 puts ""
 puts "                     What is your password?: "
@@ -162,6 +243,23 @@ if supposed_password == "cookies.and.milk"
 manager_is_in
 end
 if file_include?("PW.txt", supposed_password, "false")
+filepw = File.open('PW.txt', 'a+')
+	file_read = filepw.read
+	file_array = file_read.split(" ")
+	file_array.each do |pw|
+		if pw == supposed_password
+			@pw_index = file_array.index(pw)
+		end
+	end
+filepw.close
+
+file = File.open('colors.txt', 'a+')
+file_read = file.read
+file_split = file_read.split("\n")
+this_colors = file_split[@pw_index]
+colors = this_colors.split(" ")
+this_colors = colors
+	
 puts ""
 puts "               What chat would you like to go into?: "
 puts ""
@@ -199,10 +297,10 @@ puts "                |        You're in!        |"
 puts "                |    Welcome to the chat!  |"
 puts "                 --------------------------"
 puts ""
-in_home(supposed_password, chat_doc)
+in_home(supposed_password, chat_doc, this_colors)
 end
 end
 elsif new_or_not == "version"
 	puts ""
-	puts "Textbox 2.0"
+	puts "Textbox 3.0"
 end
